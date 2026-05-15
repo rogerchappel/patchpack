@@ -24,7 +24,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
 export function stringFlag(flags: ParsedArgs['flags'], key: string): string | undefined {
   const value = flags[key];
   if (Array.isArray(value)) return value.at(-1);
-  if (value === true) fail(`--${key} needs a value`, 'USAGE');
+  if (typeof value === 'boolean') fail(`--${key} needs a value`, 'USAGE');
   return value;
 }
 
