@@ -13,11 +13,11 @@ try {
   execFileSync('git', ['config', 'user.name', 'PatchPack Smoke'], { cwd: tmp });
   execFileSync('git', ['add', '.'], { cwd: tmp });
   execFileSync('git', ['commit', '-m', 'base'], { cwd: tmp, stdio: 'ignore' });
-  writeFileSync(path.join(tmp, 'greeting.txt'), 'hello from patchpack\n');
+  writeFileSync(path.join(tmp, 'README.md'), '# Fixture repo\n\nUsed by PatchPack smoke tests.\n\nHello from PatchPack.\n');
   const bundle = path.join(tmp, 'greeting.ppack');
   execFileSync('node', [cli, 'create', '--out', bundle, '--validate', 'npm test'], { cwd: tmp, stdio: 'pipe' });
   const inspect = execFileSync('node', [cli, 'inspect', bundle, '--format', 'json'], { cwd: tmp, encoding: 'utf8' });
-  if (!inspect.includes('greeting.txt')) throw new Error('inspect did not include changed file');
+  if (!inspect.includes('README.md')) throw new Error('inspect did not include changed file');
   execFileSync('git', ['checkout', '--', '.'], { cwd: tmp });
   execFileSync('node', [cli, 'apply', bundle], { cwd: tmp, stdio: 'pipe' });
   execFileSync('node', [cli, 'apply', bundle, '--write'], { cwd: tmp, stdio: 'pipe' });
