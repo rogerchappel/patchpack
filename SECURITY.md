@@ -1,58 +1,23 @@
 # Security Policy
 
-## Supported Versions
+PatchPack handles code diffs, which may contain secrets or malicious changes. Treat every bundle as untrusted input.
 
-Replace this section with the supported versions for `patchpack`.
+## Reporting vulnerabilities
 
-Example:
+Open a private security advisory on GitHub when available, or contact the maintainer directly. Please do not publish exploit details before a fix is available.
 
-```md
-| Version | Supported |
-| --- | --- |
-| .x | Yes |
-| < .0 | No |
-```
+## Supported versions
 
-If the project does not publish versioned releases yet, say that clearly.
+Until 1.0, only the latest release receives security fixes.
 
-## Reporting a Vulnerability
+## Safety expectations
 
-Please do not report suspected vulnerabilities in public issues, pull requests, or discussions.
+PatchPack should:
 
-Ask maintainers for the private security reporting path before sharing details.
+- never require network access to create, inspect, or apply bundles
+- dry-run apply operations unless `--write` is explicit
+- reject suspicious paths such as absolute paths or `..` traversal
+- reject likely secrets in added patch lines during bundle creation
+- verify patch payload hashes before apply
 
-If no private reporting path exists yet, ask maintainers through public project channels for a private reporting path. Do not include exploit details, secrets, personal data, or sensitive technical details in public messages.
-
-## What to Include
-
-When a private reporting path is available, include:
-
-- A clear description of the issue.
-- Affected versions, files, packages, workflows, or configuration.
-- Steps to reproduce, proof of concept, or attack scenario when safe to share.
-- Potential impact.
-- Suggested mitigation, if known.
-
-## Response Expectations
-
-Maintainers review good-faith reports as capacity allows.
-
-Do not imply paid support, guaranteed response times, guaranteed fixes, or service-level agreements unless `patchpack` explicitly provides them.
-
-## Scope
-
-In scope:
-
-- Vulnerabilities in patchpack.
-- Insecure default configuration shipped by this project.
-- CI, release, or dependency guidance maintained by this project.
-
-Out of scope:
-
-- General support requests.
-- Requests for guaranteed maintenance timelines.
-- Issues in unrelated downstream projects.
-
-## Disclosure
-
-Coordinate disclosure with maintainers before publishing vulnerability details.
+PatchPack cannot prove a patch is semantically safe. Review the diff, run validation, and apply only in a repo you trust.
