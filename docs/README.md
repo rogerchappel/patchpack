@@ -1,13 +1,11 @@
-# patchpack Documentation
+# PatchPack docs
 
-This directory holds project documentation.
+Start with the product requirements in `PRD.md`, then use `TASKS.md` for delivery tracking and `ORCHESTRATION.md` for repository rules.
 
-## Contents
+The MVP is intentionally small:
 
-- [Contributing guide](../CONTRIBUTING.md)
-- [Security policy](../SECURITY.md)
-- [Agent instructions](../AGENTS.md)
+1. `patchpack create` captures a git diff into a deterministic bundle.
+2. `patchpack inspect` prints reviewable metadata.
+3. `patchpack apply` verifies and dry-runs by default, writing only with `--write`.
 
-## Additional docs
-
-For a hosted documentation site, see the `docs-site/` directory if present.
+Examples live in `../examples` and smoke fixtures live in `../test/fixtures`.
