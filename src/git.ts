@@ -31,7 +31,12 @@ export function hasCleanTree(cwd: string): boolean {
 }
 
 export function diffAgainst(base: string, cwd: string): string {
-  return git(['diff', '--binary', '--full-index', base, '--'], cwd);
+  try {
+    return execFileSync('git', ['diff', '--binary', '--full-index', base, '--'], { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    fail(`git diff failed: ${detail}`, 'GIT_FAILED');
+  }
 }
 
 export function applyCheck(patch: string, cwd: string): void {
