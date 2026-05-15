@@ -1,21 +1,9 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+## 0.1.0
 
-This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
-format and uses semantic versioning when versioned releases are published.
-
-## [Unreleased]
-
-### Added
-
-- Initial project setup.
-
-## Release Links
-
-- Unreleased:
-  `https://github.com/rogerchappel/patchpack/compare/...HEAD`
-- Latest release:
-  `https://github.com/rogerchappel/patchpack/releases/latest`
-
-Replace placeholder links once the first release tag exists.
+- Initial local-first CLI MVP.
+- Added `create`, `inspect`, and `apply` commands.
+- Added deterministic bundle writer and manifest metadata.
+- Added dry-run apply default, path checks, patch hash checks, and likely-secret detection.
+- Added fixture-backed unit and smoke tests.
