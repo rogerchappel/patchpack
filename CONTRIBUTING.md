@@ -1,79 +1,31 @@
-# Contributing
+# Contributing to PatchPack
 
-Thanks for helping improve `patchpack`.
+Thanks for helping make patch handoffs safer.
 
-This project values small, reviewable contributions with clear verification.
+## Local workflow
 
-## Issues
-
-Before opening an issue:
-
-- Search existing issues.
-- Confirm the issue applies to `patchpack`.
-- Include enough context for maintainers to understand or reproduce the request.
-
-Bug reports should include:
-
-- What happened.
-- What you expected.
-- Steps to reproduce.
-- Relevant logs, screenshots, or files.
-- The smallest verification step that demonstrates the issue.
-
-Feature requests should include:
-
-- The use case.
-- Why the current project does not solve it.
-- Risks or compatibility concerns.
-- Suggested files or behavior that may need to change.
-
-## Pull Requests
-
-Pull requests should:
-
-- Focus on one reviewable intent.
-- Use a branch.
-- Follow Conventional Commits.
-- Include tests or verification appropriate to the change.
-- Update documentation when behavior or usage changes.
-- Avoid unrelated formatting or dependency churn.
-- Avoid secrets, private contact details, and project-specific sensitive information.
-
-## Review Pack
-
-Use this format for meaningful changes:
-
-```md
-## Review Pack
-Repo:
-Branch:
-PR:
-Task:
-Status: done / blocked / needs review
-Summary:
-Commits:
-Files changed:
-Verification:
-Risk level:
-Rollback plan:
-Human decision needed:
-Next recommended task:
+```bash
+npm install
+npm run check
+npm test
+npm run smoke
+bash scripts/validate.sh
 ```
 
-## Verification
+Keep changes small and reviewable. PatchPack is a safety tool, so tests should cover both happy paths and refusal paths.
 
-Every contribution should include verification.
+## Design principles
 
-Examples:
+- Local-first beats cloud-first.
+- Read-only defaults beat surprising writes.
+- Deterministic output beats clever formatting.
+- Clear refusal messages beat permissive ambiguity.
 
-- Documentation: inspect rendered Markdown or review the diff.
-- Tests: run the targeted test command.
-- Types: run the project typecheck.
-- Build: run the smallest build command that covers the change.
-- Manual QA: provide exact steps and observed result.
+## Pull requests
 
-If verification cannot be run, explain why and provide the exact command maintainers should run.
+Please include:
 
-## Maintainer Review
-
-Maintainers may request narrower scope, clearer verification, additional tests, or safer defaults before merging.
+- what changed and why
+- fixtures or tests for new behavior
+- any safety tradeoffs
+- command output from `bash scripts/validate.sh`
