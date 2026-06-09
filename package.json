@@ -45,5 +45,13 @@
   },
   "engines": {
     "node": ">=20"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/patchpack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/patchpack/issues"
+  },
+  "homepage": "https://github.com/rogerchappel/patchpack#readme"
 }
