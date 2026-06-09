@@ -99,3 +99,18 @@ The smoke test creates a real temporary git repo from fixtures, bundles a change
 ## Personality
 
 PatchPack is the cardboard box with a label, tamper tape, and a polite note on top. It does not try to be a platform. It just helps reviewers know what they are holding before they open it.
+
+## Release Readiness
+
+Use the checked-in scripts before opening or publishing a release:
+
+```sh
+npm run check
+npm test
+npm run build
+npm run smoke
+npm run package:smoke
+npm run release:check
+```
+
+The package smoke uses `npm pack --dry-run` so the published file list can be reviewed without publishing.
