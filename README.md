@@ -15,8 +15,17 @@ Agent handoffs often arrive as loose diffs with missing context. PatchPack wraps
 
 ## Install
 
+PatchPack is not currently published to npm. The unscoped `patchpack` package on
+npm belongs to a different project. Install this repository's package from a
+local clone instead:
+
 ```bash
-npm install -g patchpack
+git clone https://github.com/rogerchappel/patchpack.git
+cd patchpack
+npm ci
+npm pack
+npm install -g ./patchpack-*.tgz
+patchpack --help
 ```
 
 For local development:
@@ -113,4 +122,5 @@ npm run package:smoke
 npm run release:check
 ```
 
-The package smoke uses `npm pack --dry-run` so the published file list can be reviewed without publishing.
+The package smoke packs the project, installs the resulting tarball into an
+isolated prefix, and checks that `patchpack --help` identifies this project.
