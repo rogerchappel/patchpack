@@ -74,6 +74,8 @@ patchpack inspect change.ppack --format markdown
 ### `patchpack apply`
 
 Runs `git apply --check` by default. Use `--write` for real changes.
+Boolean switches must be passed bare; forms such as `--write=false` are rejected
+instead of being interpreted as enabled.
 
 ```bash
 patchpack apply change.ppack
