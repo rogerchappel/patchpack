@@ -28,8 +28,24 @@ export function stringFlag(flags: ParsedArgs['flags'], key: string): string | un
   return value;
 }
 
+export function booleanFlag(flags: ParsedArgs['flags'], key: string): boolean {
+  const value = flags[key];
+  if (value === undefined) return false;
+  if (value !== true) fail(`--${key} does not take a value`, 'USAGE');
+  return true;
+}
+
 export function arrayFlag(flags: ParsedArgs['flags'], key: string): string[] {
   const value = flags[key];
   if (!value) return [];
   return Array.isArray(value) ? value.map(String) : [String(value)];
+}
+
+export function rejectUnknownFlags(flags: ParsedArgs['flags'], allowed: string[]): void {
+  const unknown = Object.keys(flags).find(key => !allowed.includes(key));
+  if (unknown) fail(`unknown flag: --${unknown}`, 'USAGE');
+}
+
+export function requirePositionals(positionals: string[], count: number, usage: string): void {
+  if (positionals.length !== count) fail(`usage: ${usage}`, 'USAGE');
 }
