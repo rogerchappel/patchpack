@@ -12,6 +12,7 @@ Agent handoffs often arrive as loose diffs with missing context. PatchPack wraps
 - optional reviewer notes
 - suggested validation commands
 - conservative safety checks for suspicious paths and likely secrets
+- Git-compatible decoding for quoted filenames, including non-ASCII names
 
 ## Install
 
