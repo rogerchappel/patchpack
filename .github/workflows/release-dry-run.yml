@@ -39,6 +39,24 @@ jobs:
         run: node /tmp/releasebox/bin/releasebox.js check .
       - name: Run release checks
         run: npm run release:check
+      - name: Exercise release tag guard
+        run: |
+          GITHUB_REF_NAME="v$(node -p "require('./package.json').version")" node scripts/release-guard.mjs check-tag
+          if GITHUB_REF_NAME=v999.0.0 node scripts/release-guard.mjs check-tag; then
+            echo "tag mismatch unexpectedly passed" >&2
+            exit 1
+          fi
+      - name: Exercise artifact guard
+        run: |
+          mkdir -p release-artifacts
+          npm pack --pack-destination release-artifacts
+          node scripts/release-guard.mjs artifact release-artifacts
+          cp release-artifacts/*.tgz release-artifacts/duplicate.tgz
+          if node scripts/release-guard.mjs artifact release-artifacts; then
+            echo "multiple artifacts unexpectedly passed" >&2
+            exit 1
+          fi
+          rm release-artifacts/duplicate.tgz
       - name: Release notes preview
         run: |
           node /tmp/releasebox/bin/releasebox.js notes . > release-notes-preview.md
