@@ -127,3 +127,17 @@ npm run release:check
 
 The package smoke packs the project, installs the resulting tarball into an
 isolated prefix, and checks that `patchpack --help` identifies this project.
+
+PatchPack is distributed through GitHub Releases only; the release workflow
+does not publish to npm. For a first release, update `package.json`, commit the
+change, and push the matching tag (for example, version `0.2.0` requires tag
+`v0.2.0`). The workflow rejects malformed or mismatched tags and uploads the
+single tarball produced in `release-artifacts/`.
+
+It is safe to rerun a failed release workflow. If the GitHub release does not
+exist, the workflow creates it. If it already exists, the workflow refreshes
+the generated notes and replaces the same-named tarball with `--clobber`. This
+also repairs a partial first run where the release exists but its notes or
+artifact are stale. Do not delete the tag or manually rename the artifact;
+rerun the workflow from the tagged commit after correcting any underlying
+failure.
