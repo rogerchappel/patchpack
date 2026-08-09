@@ -31,7 +31,8 @@
     "pretest": "npm run build",
     "smoke": "npm run build && node scripts/smoke.mjs",
     "package:smoke": "npm run build && node scripts/package-smoke.mjs",
-    "release:check": "npm run check && npm test && npm run build && npm run smoke && npm run package:smoke",
+    "release:guard:test": "node --test scripts/release-guard.test.mjs",
+    "release:check": "npm run check && npm test && npm run release:guard:test && npm run build && npm run smoke && npm run package:smoke",
     "prepack": "npm run build"
   },
   "keywords": [
