@@ -4,6 +4,15 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
+      - src/**
+      - scripts/**
+      - examples/**
+      - README.md
+      - CHANGELOG.md
+      - CONTRIBUTING.md
+      - LICENSE
+      - SECURITY.md
+      - tsconfig*.json
       - releasebox.config.json
       - package.json
       - package-lock.json
