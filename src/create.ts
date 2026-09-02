@@ -10,7 +10,7 @@ import type { CreateOptions, PatchPackBundle } from './types.js';
 export async function createBundle(options: CreateOptions): Promise<PatchPackBundle> {
   requireGitRepo(options.cwd);
   const base = options.base ?? 'HEAD';
-  const patch = diffAgainst(base, options.cwd);
+  const patch = diffAgainst(base, options.cwd, options.out);
   if (!patch.trim()) fail('no diff found to package', 'EMPTY_DIFF');
   const secretFindings = findSecrets(patch);
   if (secretFindings.length) {
