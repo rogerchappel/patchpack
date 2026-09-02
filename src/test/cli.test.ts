@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -54,4 +54,53 @@ test('apply rejects valued booleans without writing or bypassing the clean-tree 
 test('apply rejects unknown flags and extra positional arguments', () => {
   assert.match(run(process.cwd(), 'apply', 'bundle.ppack', '--wirte').stderr, /unknown flag: --wirte/);
   assert.match(run(process.cwd(), 'apply', 'bundle.ppack', 'extra').stderr, /usage: patchpack apply/);
+});
+
+test('create includes untracked text and binary files but excludes ignored files and its output', () => {
+  const source = mkdtempSync(path.join(tmpdir(), 'patchpack-untracked-source-'));
+  const target = mkdtempSync(path.join(tmpdir(), 'patchpack-untracked-target-'));
+  const bundle = path.join(source, 'change.ppack');
+  const binary = Buffer.from([0x00, 0xff, 0x10, 0x80, 0x41]);
+  try {
+    for (const cwd of [source, target]) {
+      git(cwd, 'init', '-b', 'main');
+      git(cwd, 'config', 'user.name', 'PatchPack Test');
+      git(cwd, 'config', 'user.email', 'test@example.invalid');
+      writeFileSync(path.join(cwd, '.gitignore'), 'ignored.txt\n');
+      writeFileSync(path.join(cwd, 'tracked.txt'), 'before\n');
+      git(cwd, 'add', '.');
+      git(cwd, 'commit', '-m', 'base');
+    }
+
+    writeFileSync(path.join(source, 'tracked.txt'), 'after\n');
+    writeFileSync(path.join(source, 'new.txt'), 'new text\n');
+    writeFileSync(path.join(source, 'new.bin'), binary);
+    writeFileSync(path.join(source, 'ignored.txt'), 'ignore me\n');
+    writeFileSync(bundle, 'stale bundle that must not package itself\n');
+
+    const created = run(source, 'create', '--out', 'change.ppack');
+    assert.equal(created.status, 0, created.stderr);
+    assert.match(created.stdout, /with 3 file\(s\)/);
+
+    const inspected = run(source, 'inspect', bundle, '--format', 'json');
+    assert.equal(inspected.status, 0, inspected.stderr);
+    const manifest = JSON.parse(inspected.stdout) as { files: Array<{ path: string; status: string }>; stats: { files: number } };
+    assert.deepEqual(manifest.files.map(file => [file.path, file.status]), [
+      ['new.bin', 'added'],
+      ['new.txt', 'added'],
+      ['tracked.txt', 'modified']
+    ]);
+    assert.equal(manifest.stats.files, 3);
+
+    const applied = run(target, 'apply', bundle, '--write');
+    assert.equal(applied.status, 0, applied.stderr);
+    assert.equal(readFileSync(path.join(target, 'tracked.txt'), 'utf8'), 'after\n');
+    assert.equal(readFileSync(path.join(target, 'new.txt'), 'utf8'), 'new text\n');
+    assert.deepEqual(readFileSync(path.join(target, 'new.bin')), binary);
+    assert.equal(existsSync(path.join(target, 'ignored.txt')), false);
+    assert.equal(existsSync(path.join(target, 'change.ppack')), false);
+  } finally {
+    rmSync(source, { recursive: true, force: true });
+    rmSync(target, { recursive: true, force: true });
+  }
 });
