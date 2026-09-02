@@ -58,7 +58,10 @@ patchpack apply fix-login.ppack --write
 
 ### `patchpack create`
 
-Packages the current diff against `HEAD` unless `--base` is supplied.
+Packages tracked changes against `HEAD` unless `--base` is supplied, plus new
+untracked files. Files ignored by Git are not included. The output bundle is
+also excluded when it is written inside the repository, including when an
+older bundle already exists at that path. Text and binary files are supported.
 
 ```bash
 patchpack create --out change.ppack --base main --notes HANDOFF.md --validate "npm test"
@@ -91,6 +94,7 @@ PatchPack is local-first and fail-closed:
 - dirty working trees are rejected before apply unless `--skip-clean-check` is explicit
 - path traversal and absolute paths are blocked
 - likely secrets in added patch lines are rejected during create
+- create includes tracked changes and non-ignored untracked files, but excludes its output bundle
 - bundle payloads include a patch hash and are deterministic for the same diff/notes
 
 It is not a sandbox. Always inspect bundles before applying them.
