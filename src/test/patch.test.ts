@@ -69,6 +69,21 @@ test('retains unquoted paths containing spaces', () => {
   assert.deepEqual(files, [{ path: 'old name.txt', status: 'modified', additions: 1, deletions: 1 }]);
 });
 
+test('rejects Windows drive-prefixed paths on every host platform', () => {
+  for (const drivePath of ['C:/outside.txt', 'z:/outside.txt', 'C:\\\\outside.txt']) {
+    assert.throws(
+      () => parsePatchFiles(`diff --git a/safe.txt b/${drivePath}\\n`),
+      /unsafe path in patch/
+    );
+  }
+});
+
+test('accepts safe relative paths regardless of host platform', () => {
+  assert.deepEqual(parsePatchFiles(`diff --git a/src/file.txt b/src/file.txt\n`), [
+    { path: 'src/file.txt', status: 'modified', additions: 0, deletions: 0 }
+  ]);
+});
+
 test('validates decoded quoted paths', () => {
   assert.throws(
     () => parsePatchFiles(`diff --git "a/..\\057secret" "b/..\\057secret"\n`),

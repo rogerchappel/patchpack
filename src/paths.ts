@@ -3,7 +3,7 @@ import { fail } from './errors.js';
 
 export function assertSafePath(filePath: string): void {
   const normalized = filePath.replaceAll('\\\\', '/');
-  if (!normalized || normalized.startsWith('/') || normalized.includes('\0')) {
+  if (!normalized || normalized.startsWith('/') || /^[a-z]:\//i.test(normalized) || normalized.includes('\0')) {
     fail(`unsafe path in patch: ${filePath}`, 'UNSAFE_PATH');
   }
   const parts = normalized.split('/');
