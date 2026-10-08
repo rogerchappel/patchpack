@@ -129,6 +129,23 @@ npm run package:smoke
 npm run release:check
 ```
 
+These commands are also the release workflow's local gates. A successful
+command exits with status 0; any nonzero exit means the release is not ready.
+Run `npm ci` first to install the locked dependencies. The individual checks
+cover:
+
+- `npm run check` — type-check the project without emitting build output.
+- `npm test` — build the test files and run the Node test suite; success means
+  all tests pass.
+- `npm run build` — compile the distributable files into `dist/`.
+- `npm run smoke` — build and run the end-to-end smoke scenario using fixture
+  repositories; it must complete without an error.
+- `npm run package:smoke` — build, pack, install the tarball in an isolated
+  prefix, and verify the installed `patchpack --help` command.
+- `npm run release:check` — run the type check, tests, release guard and path
+  tests, build, smoke scenario, and package smoke in sequence. It is the
+  combined gate and should exit 0 only when each constituent check passes.
+
 The package smoke packs the project, installs the resulting tarball into an
 isolated prefix, and checks that `patchpack --help` identifies this project.
 
